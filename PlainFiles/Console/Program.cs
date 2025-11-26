@@ -1,6 +1,6 @@
 ﻿using PlainFiles.Core;
 
-internal class Program
+public class Program
 {
     private static void Main(string[] args)
     {
@@ -67,6 +67,7 @@ internal class Program
             Console.WriteLine("3. Guardar cambios");
             Console.WriteLine("4. Editar persona");
             Console.WriteLine("5. Borrar persona");
+            Console.WriteLine("6. Informe por ciudad");
             Console.WriteLine("0. Salir");
             Console.WriteLine("===============================");
 
@@ -96,6 +97,10 @@ internal class Program
                     DeletePerson(PM);
                     break;
 
+                case "6":
+                    PM.ReportByCity();
+                    break;
+
                 case "0":
                     Console.WriteLine("Saliendo del sistema...");
                     break;
@@ -122,18 +127,38 @@ internal class Program
 
             Console.Write("Nombre: ");
             string name = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("El nombre no puede estar vacío.");
+                return;
+            }
 
             Console.Write("Apellido: ");
             string lastname = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(lastname))
+            {
+                Console.WriteLine("El apellido no puede estar vacío.");
+                return;
+            }
 
             Console.Write("Teléfono: ");
             string phone = Console.ReadLine();
+            if (!phone.All(char.IsDigit))
+            {
+                Console.WriteLine("El teléfono debe tener solo números.");
+                return;
+            }
 
             Console.Write("Ciudad: ");
             string city = Console.ReadLine();
 
             Console.Write("Saldo: ");
             double balance = double.Parse(Console.ReadLine());
+            if (balance <= 0)
+            {
+                Console.WriteLine("El saldo debe ser positivo.");
+                return;
+            }
 
             Person p = new Person
             {
@@ -146,6 +171,7 @@ internal class Program
             };
 
             PM.AddPerson(p);
+            Console.WriteLine("Persona agregada.");
         }
         catch
         {
@@ -168,23 +194,43 @@ internal class Program
 
         Console.Write($"Nombre ({p.Name}): ");
         string name = Console.ReadLine();
-        if (!string.IsNullOrEmpty(name)) p.Name = name;
+        if (!string.IsNullOrWhiteSpace(name))
+            p.Name = name;
 
         Console.Write($"Apellido ({p.Lastname}): ");
         string lastname = Console.ReadLine();
-        if (!string.IsNullOrEmpty(lastname)) p.Lastname = lastname;
+        if (!string.IsNullOrWhiteSpace(lastname))
+            p.Lastname = lastname;
 
         Console.Write($"Teléfono ({p.Phone}): ");
         string phone = Console.ReadLine();
-        if (!string.IsNullOrEmpty(phone)) p.Phone = phone;
+        if (!string.IsNullOrWhiteSpace(phone))
+        {
+            if (!phone.All(char.IsDigit))
+            {
+                Console.WriteLine("El teléfono debe tener solo números.");
+                return;
+            }
+            p.Phone = phone;
+        }
 
         Console.Write($"Ciudad ({p.City}): ");
         string city = Console.ReadLine();
-        if (!string.IsNullOrEmpty(city)) p.City = city;
+        if (!string.IsNullOrWhiteSpace(city))
+            p.City = city;
 
         Console.Write($"Saldo ({p.Balance}): ");
         string bal = Console.ReadLine();
-        if (!string.IsNullOrEmpty(bal)) p.Balance = double.Parse(bal);
+        if (!string.IsNullOrWhiteSpace(bal))
+        {
+            double newBal = double.Parse(bal);
+            if (newBal <= 0)
+            {
+                Console.WriteLine("El saldo debe ser positivo.");
+                return;
+            }
+            p.Balance = newBal;
+        }
 
         Console.WriteLine("Datos actualizados.");
     }

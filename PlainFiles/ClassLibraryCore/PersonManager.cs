@@ -1,4 +1,5 @@
 ﻿using PlainFiles.Core;
+using System.Text.RegularExpressions;
 
 public class PersonManager
 {
@@ -65,5 +66,35 @@ public class PersonManager
         People.Remove(p);
         Log($"Eliminó persona ID {id}");
         return true;
+    }
+
+    public void ReportByCity()
+    {
+        var groups = People
+            .GroupBy(p => p.City)
+            .OrderBy(g => g.Key);
+
+        double totalGeneral = 0;
+
+        foreach (var group in groups)
+        {
+            Console.WriteLine($"\nCiudad: {group.Key}");
+            Console.WriteLine("ID\tNombre\tApellido\tSaldo");
+
+            double subtotal = 0;
+
+            foreach (var p in group)
+            {
+                Console.WriteLine($"{p.Id}\t{p.Name}\t{p.Lastname}\t{p.Balance,20:n2}");
+                subtotal += p.Balance;
+            }
+
+            Console.WriteLine($"Total {group.Key}: {subtotal,30:n2}");
+            totalGeneral += subtotal;
+        }
+
+        Console.WriteLine($"\nTOTAL GENERAL: {totalGeneral,30:n2}\n");
+
+        Log("Mostró informe por ciudad");
     }
 }
