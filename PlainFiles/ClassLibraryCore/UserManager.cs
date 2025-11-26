@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Enumeration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlainFiles.Core;
+﻿using PlainFiles.Core;
 
 public class UserManager
 {
     private string filename = "Users.csv";
     private NugetCsvHelper csv = new NugetCsvHelper();
+
     public List<User> Users { get; set; } = new List<User>();
 
     public UserManager()
@@ -32,23 +26,23 @@ public class UserManager
     {
         foreach (var u in Users)
         {
-            if (u.UserName == username)
+            if (u.Username == username)
             {
-                if (!u.Active)
-                    return "Blocked";
-                if (u.Password == password)
-                    return "Ok";
-                return "Wrong";
+                if (!u.Active) return "blocked";
+                if (u.Password == password) return "ok";
+                return "wrong";
             }
         }
-        return "Notfound";
+
+        return "notfound";
     }
 
     public void BlockUser(string username)
     {
         foreach (var u in Users)
-            if (u.UserName == username)
+            if (u.Username == username)
                 u.Active = false;
+
         SaveUsers();
     }
 }
